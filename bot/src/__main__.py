@@ -1,9 +1,12 @@
-import os
-import logging
 import asyncio
+import logging
+import os
 from typing import NoReturn
+
 from aiogram import Bot, Dispatcher
-from dotenv import load_dotenv, find_dotenv
+from dotenv import find_dotenv, load_dotenv
+
+from handlers import register_user_interaction_handlers
 
 
 async def main() -> NoReturn:
@@ -12,15 +15,31 @@ async def main() -> NoReturn:
     load_dotenv(find_dotenv())
 
     dp = Dispatcher()
-    bot = Bot(token=os.getenv('TELEGRAM_TOKEN'))
+    bot = Bot(token=os.getenv("TELEGRAM_TOKEN"))
 
-    await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot)
+    await register_handlers(dp=dp)
+    await start_bot(dp=dp, bot=bot)
 
 
-if __name__ == '__main__':
+async def start_bot(dp: Dispatcher, bot: Bot) -> NoReturn:
+    try:
+        await bot.delete_webhook(drop_pending_updates=True)
+        await dp.start_polling(bot)
+    except Exception as e:
+        logging.info(f"Error starting bot: {e}")
+
+
+async def register_handlers(dp: Dispatcher) -> None:
+    handlers = [
+        register_user_interaction_handlers,
+    ]
+
+    for handler in handlers:
+        handler(dp)
+
+
+if __name__ == "__main__":
     try:
         asyncio.run(main())
-
     except Exception as e:
-        logging.info(msg='Long polling error')
+        logging.exception(f"Error starting bot: {e}")
