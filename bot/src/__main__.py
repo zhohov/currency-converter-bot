@@ -6,8 +6,7 @@ from typing import NoReturn
 from aiogram import Bot, Dispatcher, types
 from dotenv import find_dotenv, load_dotenv
 
-from handlers import (register_conversion_handlers,
-                      register_user_interaction_handlers)
+from handlers import register_conversion_handlers, register_user_interaction_handlers
 from utils import bot_commands as bot_cmd
 
 
