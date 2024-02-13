@@ -3,10 +3,12 @@ import logging
 import os
 from typing import NoReturn
 
-from aiogram import Bot, Dispatcher
+from aiogram import Bot, Dispatcher, types
 from dotenv import find_dotenv, load_dotenv
 
-from handlers import register_user_interaction_handlers
+from handlers import (register_conversion_handlers,
+                      register_user_interaction_handlers)
+from utils import bot_commands as bot_cmd
 
 
 async def main() -> NoReturn:
@@ -17,6 +19,7 @@ async def main() -> NoReturn:
     dp = Dispatcher()
     bot = Bot(token=os.getenv("TELEGRAM_TOKEN"))
 
+    await register_commands(bot=bot, bot_commands=bot_cmd)
     await register_handlers(dp=dp)
     await start_bot(dp=dp, bot=bot)
 
@@ -32,10 +35,19 @@ async def start_bot(dp: Dispatcher, bot: Bot) -> NoReturn:
 async def register_handlers(dp: Dispatcher) -> None:
     handlers = [
         register_user_interaction_handlers,
+        register_conversion_handlers,
     ]
 
     for handler in handlers:
         handler(dp)
+
+
+async def register_commands(bot: Bot, bot_commands: list) -> None:
+    commands = []
+    for cmd in bot_commands:
+        commands.append(types.BotCommand(command=cmd[0], description=cmd[1]))
+
+    await bot.set_my_commands(commands=commands)
 
 
 if __name__ == "__main__":

@@ -27,7 +27,9 @@ def _convert_currency(url: str, data: ConvertInfo) -> int:
 
 
 def _get_convert_currency_url(currency_from: str, currency_to: str) -> str:
-    api_url = "https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/"
+    api_url = (
+        "https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/"
+    )
     url = api_url + f"{currency_from}/{currency_to}.json"
     return url
 
