@@ -9,3 +9,6 @@ black:
 
 isort:
 	cd bot && poetry run isort src
+
+build:
+	docker-compose up --build
