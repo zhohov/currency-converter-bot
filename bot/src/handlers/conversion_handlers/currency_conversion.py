@@ -23,7 +23,7 @@ async def convert_command(
         try:
             convert_result = get_convert_currency(convert)
             return await message.answer(
-                text=f"{int(convert_result)}{convert.currency_to.upper()}"
+                text=f"{int(convert_result)} {convert.currency_to.upper()}"
             )
         except Exception as e:
             logging.info(f"Exception {e}")
